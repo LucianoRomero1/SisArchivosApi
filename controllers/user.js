@@ -41,17 +41,10 @@ const register = async (req, res) => {
       message: "Invalid parameters",
     });
   }
-
-  //TODO: Probar esta opcion despues
-  // const UserExist = await User.findOne({
-  //   where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('email')), params.email),
-  // });
-
+  
   const UserExist = await User.findOne({
-    where: {
-      email: params.email,
-      username: params.username,
-    },
+    where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('email')), params.email),
+    where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('username')), params.username),
   });
 
   if (UserExist) {
@@ -76,69 +69,7 @@ const register = async (req, res) => {
         message: "Error saving user " + error,
       });
     }
-
-    // let userToSave = new User(params);
-
-    // userToSave.save((error, userStored) => {
-    //   if (error || !userStored) {
-    //     res.status(500).send({
-    //       status: "error",
-    //       message: "Error saving user",
-    //     });
-    //   }
-
-    //   if (userStored) {
-    //     return res.status(200).json({
-    //       status: "success",
-    //       message: "Successfully registered user",
-    //       user: userStored,
-    //     });
-    //   }
-    // });
   }
-
-  // User.findOne({
-  //   where: {
-  //     email: params.email,
-  //     username: params.username,
-  //   },
-  // }).exec(async (error, users) => {
-  //   if (error) {
-  //     return res.status(500).json({
-  //       status: "error",
-  //       message: "User query error",
-  //     });
-  //   }
-
-  //   if (users && users.length >= 1) {
-  //     return res.status(200).send({
-  //       status: "success",
-  //       message: "User already exist",
-  //     });
-  //   }
-
-  //   let pwd = await bcrypt.hash(params.password, 10);
-  //   params.password = pwd;
-
-  //   let userToSave = new User(params);
-
-  //   userToSave.save((error, userStored) => {
-  //     if (error || !userStored) {
-  //       res.status(500).send({
-  //         status: "error",
-  //         message: "Error saving user",
-  //       });
-  //     }
-
-  //     if (userStored) {
-  //       return res.status(200).json({
-  //         status: "success",
-  //         message: "Successfully registered user",
-  //         user: userStored,
-  //       });
-  //     }
-  //   });
-  // });
 };
 
 const login = (req, res) => {};
