@@ -1,6 +1,7 @@
 //Dependencies
 const bcrypt = require("bcrypt");
 const path = require("path");
+const { Op } = require("sequelize");
 
 //Services
 const jwt = require("../services/jwt");
@@ -41,10 +42,11 @@ const register = async (req, res) => {
       message: "Invalid parameters",
     });
   }
-  
+
   const UserExist = await User.findOne({
-    where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('email')), params.email),
-    where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('username')), params.username),
+    where: {
+      [Op.or]: [{ username: params.username }, { email: params.email }],
+    },
   });
 
   if (UserExist) {
@@ -72,9 +74,52 @@ const register = async (req, res) => {
   }
 };
 
-const login = (req, res) => {};
+const login = async (req, res) => {
+  let params = req.body;
+
+  if (!params.username || !params.password) {
+    return res.status(400).send({
+      status: "error",
+      message: "Missing params",
+    });
+  }
+
+  const UserExist = await User.findOne({
+    where: {
+      [Op.or]: [{ username: params.username }, { email: params.username }],
+    },
+  });
+
+  if (!UserExist) {
+    return res.status(404).send({
+      status: "error",
+      message: "User doesnt exist",
+    });
+  } else {
+    let pwd = await bcrypt.compare(params.password, UserExist.password);
+    if (!pwd) {
+      return res.status(400).send({
+        status: "error",
+        message: "Invalid password",
+      });
+    }
+
+    const token = await jwt.createToken(UserExist);
+
+    return res.status(200).send({
+      status: "success",
+      message: "Login",
+      user: {
+        id: UserExist.id,
+        username: UserExist.username,
+      },
+      token,
+    });
+  }
+};
 
 module.exports = {
   test,
   register,
+  login,
 };
