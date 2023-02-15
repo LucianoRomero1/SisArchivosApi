@@ -95,31 +95,57 @@ const login = async (req, res) => {
       status: "error",
       message: "User doesnt exist",
     });
-  } else {
-    let pwd = await bcrypt.compare(params.password, UserExist.password);
-    if (!pwd) {
-      return res.status(400).send({
-        status: "error",
-        message: "Invalid password",
-      });
-    }
+  }
 
-    const token = await jwt.createToken(UserExist);
-
-    return res.status(200).send({
-      status: "success",
-      message: "Login",
-      user: {
-        id: UserExist.id,
-        username: UserExist.username,
-      },
-      token,
+  let pwd = await bcrypt.compare(params.password, UserExist.password);
+  if (!pwd) {
+    return res.status(400).send({
+      status: "error",
+      message: "Invalid password",
     });
   }
+
+  const token = await jwt.createToken(UserExist);
+
+  return res.status(200).send({
+    status: "success",
+    message: "Login",
+    user: {
+      id: UserExist.id,
+      username: UserExist.username,
+    },
+    token,
+  });
+};
+
+const profile = async (req, res) => {
+  const id = req.params.id;
+
+  const UserProfile = await User.findOne({
+    where: {
+      id: id,
+    },
+    attributes: {
+      exclude: ["password"],
+    },
+  });
+
+  if (!UserProfile) {
+    return res.status(404).send({
+      status: "error",
+      message: "User does not exist",
+    });
+  }
+
+  return res.status(200).send({
+    status: "success",
+    user: UserProfile,
+  });
 };
 
 module.exports = {
   test,
   register,
   login,
+  profile,
 };
