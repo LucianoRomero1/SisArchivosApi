@@ -5,6 +5,7 @@ const db = require("./models/index");
 //Routes declaration
 const UserRoutes = require("./routes/user");
 const AreaRoutes = require("./routes/area");
+const SideRoutes = require("./routes/side");
 
 //Create node server
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 //Routes
 app.use("/api/user/", UserRoutes);
 app.use("/api/area/", AreaRoutes);
+app.use("/api/side/", SideRoutes);
 
 //Put the server to listen http requests
 app.listen(port, () => {
