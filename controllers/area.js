@@ -90,9 +90,9 @@ const detail = async (req, res) => {
     where: {
       id: id,
     },
-    attributes: {
-      exclude: ["updatedAt"],
-    },
+    // attributes: {
+    //   exclude: ["updatedAt"],
+    // },
   });
 
   if (!AreaDetail) {
@@ -114,9 +114,6 @@ const update = async (req, res) => {
   const AreaFinded = await Area.findOne({
     where: {
       id: id,
-    },
-    attributes: {
-      exclude: ["updatedAt"],
     },
   });
 
@@ -163,7 +160,37 @@ const update = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {};
+const remove = async (req, res) => {
+  let id = req.params.id;
+
+  const AreaToRemove = await Area.findOne({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!AreaToRemove) {
+    return res.status(404).send({
+      status: "error",
+      message: "Area does not exist",
+    });
+  }
+
+  try {
+    await AreaToRemove.destroy();
+
+    return res.status(200).send({
+      status: "success",
+      message: "The area was deleted succesfully",
+      data: AreaToRemove
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error trying to delete area " + error,
+    });
+  }
+};
 
 module.exports = {
   test,
