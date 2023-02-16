@@ -21,6 +21,7 @@ const create = async (req, res) => {
   const params = req.body;
 
   if (!params.name) {
+    //Tambien podria retornar como mensaje "missing parameters". Pero como es uno solo el campo que tiene que llegar no es problema
     return res.status(400).send({
       status: "error",
       message: "The name of Area is required",
@@ -41,11 +42,11 @@ const create = async (req, res) => {
   }
 
   try {
-    let NewArea = await Area.create(params);
+    let newArea = await Area.create(params);
     return res.status(200).send({
       status: "success",
       message: "Area created successfully",
-      area: NewArea,
+      area: newArea,
     });
   } catch (error) {
     return res.status(500).send({
@@ -74,7 +75,6 @@ const list = async (req, res) => {
     limit: size,
     offset: page * size,
   });
-  
 
   return res.status(200).send({
     status: "success",
@@ -83,9 +83,85 @@ const list = async (req, res) => {
   });
 };
 
-const detail = async (req, res) => {};
+const detail = async (req, res) => {
+  let id = req.params.id;
 
-const update = async (req, res) => {};
+  const AreaDetail = await Area.findOne({
+    where: {
+      id: id,
+    },
+    attributes: {
+      exclude: ["updatedAt"],
+    },
+  });
+
+  if (!AreaDetail) {
+    return res.status(404).send({
+      status: "error",
+      message: "Area does not exist",
+    });
+  }
+
+  return res.status(200).send({
+    status: "success",
+    data: AreaDetail,
+  });
+};
+
+const update = async (req, res) => {
+  let id = req.params.id;
+
+  const AreaFinded = await Area.findOne({
+    where: {
+      id: id,
+    },
+    attributes: {
+      exclude: ["updatedAt"],
+    },
+  });
+
+  if (!AreaFinded) {
+    return res.status(404).send({
+      status: "error",
+      message: "Area does not exist",
+    });
+  }
+
+  try {
+    let params = req.body;
+
+    if (!params.name) {
+      //Tambien podria retornar como mensaje "missing parameters". Pero como es uno solo el campo que tiene que llegar no es problema
+      return res.status(400).send({
+        status: "error",
+        message: "The name of Area is required",
+      });
+    }
+
+    await Area.update(
+      {
+        name: params.name,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+
+    await AreaFinded.reload();
+
+    return res.status(200).send({
+      status: "success",
+      data: AreaFinded,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error trying to update area " + error,
+    });
+  }
+};
 
 const remove = async (req, res) => {};
 
