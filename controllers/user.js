@@ -1,12 +1,10 @@
 //Dependencies
 const bcrypt = require("bcrypt");
-const path = require("path");
 const { Op } = require("sequelize");
 
 //Services
 const jwt = require("../services/jwt");
 const validate = require("../helpers/validate");
-const { Sequelize, sequelize } = require("../models/index");
 
 //Models
 const db = require("../models/index");
