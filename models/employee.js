@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Employee.hasMany(models.Movement, {
         as: "movements",
         foreignKey: "employeeId",
+        onDelete: "CASCADE",
       });
     }
   }

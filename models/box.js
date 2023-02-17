@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       Box.hasMany(models.Folder, {
         as: "folders",
         foreignKey: "boxId",
+        onDelete: "CASCADE",
       });
     }
   }

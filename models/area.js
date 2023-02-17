@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Area.hasMany(models.Box, {
         as: "boxes",
         foreignKey: "areaId",
+        onDelete: "CASCADE",
       });
     }
   }

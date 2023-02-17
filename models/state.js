@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       State.hasMany(models.Box, {
         as: "boxes",
         foreignKey: "stateId",
+        onDelete: "CASCADE",
       });
     }
   }
