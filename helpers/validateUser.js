@@ -1,6 +1,6 @@
 const validator = require("validator");
 
-const validate = (params) => {
+const validateUser = (params) => {
   let name =
     !validator.isEmpty(params.name) &&
     validator.isLength(params.name, { min: 3, max: undefined }) &&
@@ -25,4 +25,4 @@ const validate = (params) => {
   }
 };
 
-module.exports = validate;
+module.exports = validateUser;
