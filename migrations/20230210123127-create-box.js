@@ -30,9 +30,6 @@ module.exports = {
       observation: {
         type: Sequelize.STRING,
       },
-      dateFrom: {
-        type: Sequelize.DATE,
-      },
       dateTo: {
         type: Sequelize.DATE,
       },

@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
       numberFrom: DataTypes.INTEGER,
       numberTo: DataTypes.INTEGER,
       observation: DataTypes.STRING,
-      dateFrom: DataTypes.DATE,
       dateTo: DataTypes.DATE,
       areaId: DataTypes.INTEGER,
       sideId: DataTypes.INTEGER,
