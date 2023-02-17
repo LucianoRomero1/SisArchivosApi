@@ -17,9 +17,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "side",
         foreignKey: "sideId",
       });
-      Box.hasMany(models.Box, {
+      Box.belongsTo(models.State, {
+        as: "state",
+        foreignKey: "stateId",
+      });
+      Box.hasMany(models.Folder, {
         as: "folders",
         foreignKey: "boxId",
+        onDelete: "CASCADE",
       });
     }
   }
@@ -32,11 +37,10 @@ module.exports = (sequelize, DataTypes) => {
       numberFrom: DataTypes.INTEGER,
       numberTo: DataTypes.INTEGER,
       observation: DataTypes.STRING,
-      state: DataTypes.TINYINT,
-      dateFrom: DataTypes.DATE,
       dateTo: DataTypes.DATE,
       areaId: DataTypes.INTEGER,
       sideId: DataTypes.INTEGER,
+      stateId: DataTypes.INTEGER
     },
     {
       sequelize,

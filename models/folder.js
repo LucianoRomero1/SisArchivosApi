@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Folder.hasMany(models.Movement, {
         as: "movements",
         foreignKey: "folderId",
+        onDelete: "CASCADE",
       })
     }
   }

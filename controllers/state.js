@@ -1,52 +1,52 @@
 //Models
 const db = require("../models/index");
-const Area = db.Area;
+const State = db.State;
 
 //Endpoints
 const test = (req, res) => {
   return res.status(200).send({
     status: "success",
-    message: "Message sended from area controller",
+    message: "Message sended from state controller",
   });
 };
 
 const create = async (req, res) => {
   const params = req.body;
 
-  if (!params.name) {
+  if (!params.description) {
     //Tambien podria retornar como mensaje "missing parameters". Pero como es uno solo el campo que tiene que llegar no es problema
     return res.status(400).send({
       status: "error",
-      message: "The name of area is required",
+      message: "The description of state is required",
     });
   }
 
-  const AreaExist = await Area.findOne({
+  const stateExist = await State.findOne({
     where: {
-      name: params.name,
+      description: params.description,
     },
   });
 
-  if (AreaExist) {
+  if (stateExist) {
     return res.status(200).send({
       status: "success",
-      message: "The area " + AreaExist.name + " already exist",
+      message: "The state " + stateExist.description + " already exist",
     });
   }
 
   try {
-    let newArea = await Area.create({
-      name: params.name.toUpperCase(),
+    let newState = await State.create({
+      description: params.description.toUpperCase(),
     });
     return res.status(200).send({
       status: "success",
-      message: "Area created successfully",
-      area: newArea,
+      message: "state created successfully",
+      state: newState,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
-      message: "Error saving area " + error,
+      message: "Error saving state " + error,
     });
   }
 };
@@ -65,7 +65,7 @@ const list = async (req, res) => {
     size = sizeAsNumber;
   }
 
-  const Areas = await Area.findAndCountAll({
+  const states = await State.findAndCountAll({
     order: [["createdAt", "DESC"]],
     limit: size,
     offset: page * size,
@@ -73,15 +73,15 @@ const list = async (req, res) => {
 
   return res.status(200).send({
     status: "success",
-    data: Areas,
-    totalPages: Math.ceil(Areas.count / size),
+    data: states,
+    totalPages: Math.ceil(states.count / size),
   });
 };
 
 const detail = async (req, res) => {
   let id = req.params.id;
 
-  const AreaDetail = await Area.findOne({
+  const stateDetail = await State.findOne({
     where: {
       id: id,
     },
@@ -90,49 +90,49 @@ const detail = async (req, res) => {
     // },
   });
 
-  if (!AreaDetail) {
+  if (!stateDetail) {
     return res.status(404).send({
       status: "error",
-      message: "Area does not exist",
+      message: "state does not exist",
     });
   }
 
   return res.status(200).send({
     status: "success",
-    data: AreaDetail,
+    data: stateDetail,
   });
 };
 
 const update = async (req, res) => {
   let id = req.params.id;
 
-  const AreaFinded = await Area.findOne({
+  const stateFinded = await State.findOne({
     where: {
       id: id,
     },
   });
 
-  if (!AreaFinded) {
+  if (!stateFinded) {
     return res.status(404).send({
       status: "error",
-      message: "Area does not exist",
+      message: "state does not exist",
     });
   }
 
   try {
     let params = req.body;
 
-    if (!params.name) {
+    if (!params.description) {
       //Tambien podria retornar como mensaje "missing parameters". Pero como es uno solo el campo que tiene que llegar no es problema
       return res.status(400).send({
         status: "error",
-        message: "The name of Area is required",
+        message: "The description of state is required",
       });
     }
 
-    await Area.update(
+    await State.update(
       {
-        name: params.name.toUpperCase(),
+        description: params.description.toUpperCase(),
       },
       {
         where: {
@@ -141,16 +141,16 @@ const update = async (req, res) => {
       }
     );
 
-    await AreaFinded.reload();
+    await stateFinded.reload();
 
     return res.status(200).send({
       status: "success",
-      data: AreaFinded,
+      data: stateFinded,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
-      message: "Error trying to update area " + error,
+      message: "Error trying to update state " + error,
     });
   }
 };
@@ -158,31 +158,31 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   let id = req.params.id;
 
-  const AreaToRemove = await Area.findOne({
+  const stateToRemove = await State.findOne({
     where: {
       id: id,
     },
   });
 
-  if (!AreaToRemove) {
+  if (!stateToRemove) {
     return res.status(404).send({
       status: "error",
-      message: "Area does not exist",
+      message: "state does not exist",
     });
   }
 
   try {
-    await AreaToRemove.destroy();
+    await stateToRemove.destroy();
 
     return res.status(200).send({
       status: "success",
-      message: "The area was deleted succesfully",
-      data: AreaToRemove,
+      message: "The state was deleted succesfully",
+      data: stateToRemove,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
-      message: "Error trying to delete area " + error,
+      message: "Error trying to delete state " + error,
     });
   }
 };

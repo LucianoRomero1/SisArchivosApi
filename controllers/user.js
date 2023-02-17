@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 
 //Services
 const jwt = require("../services/jwt");
-const validate = require("../helpers/validate");
+const validateUser = require("../helpers/validateUser");
 
 //Models
 const db = require("../models/index");
@@ -33,7 +33,7 @@ const register = async (req, res) => {
   }
 
   try {
-    validate(params);
+    validateUser(params);
   } catch (error) {
     return res.status(500).send({
       status: "error",
