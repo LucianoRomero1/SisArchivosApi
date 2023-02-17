@@ -32,7 +32,8 @@ app.listen(port, () => {
   console.log("Node server is running in port: ", port);
 });
 
-db.sequelize
-  .sync({ force: false })
-  .then(() => console.log("Connected to the DB successfully"))
-  .catch((e) => console.log("Error => " + e));
+// //Esto se usa en dev nomas, en prod no porque puede destruir todos los registros
+// db.sequelize
+//   .sync({ force: false })
+//   .then(() => console.log("Connected to the DB successfully"))
+//   .catch((e) => console.log("Error => " + e));
