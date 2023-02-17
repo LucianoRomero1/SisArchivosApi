@@ -35,7 +35,9 @@ const create = async (req, res) => {
   }
 
   try {
-    let newState = await State.create(params);
+    let newState = await State.create({
+      description: params.description.toUpperCase(),
+    });
     return res.status(200).send({
       status: "success",
       message: "state created successfully",
@@ -130,7 +132,7 @@ const update = async (req, res) => {
 
     await State.update(
       {
-        description: params.description,
+        description: params.description.toUpperCase(),
       },
       {
         where: {

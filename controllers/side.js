@@ -35,7 +35,9 @@ const create = async (req, res) => {
   }
 
   try {
-    let newSide = await Side.create(params);
+    let newSide = await Side.create({
+      name: params.name.toUpperCase(),
+    });
     return res.status(200).send({
       status: "success",
       message: "Side created successfully",
@@ -130,7 +132,7 @@ const update = async (req, res) => {
 
     await Side.update(
       {
-        name: params.name,
+        name: params.name.toUpperCase(),
       },
       {
         where: {
@@ -175,7 +177,7 @@ const remove = async (req, res) => {
     return res.status(200).send({
       status: "success",
       message: "The side was deleted succesfully",
-      data: SideToRemove
+      data: SideToRemove,
     });
   } catch (error) {
     return res.status(500).send({

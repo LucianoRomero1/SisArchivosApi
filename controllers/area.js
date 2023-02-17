@@ -35,7 +35,9 @@ const create = async (req, res) => {
   }
 
   try {
-    let newArea = await Area.create(params);
+    let newArea = await Area.create({
+      name: params.name.toUpperCase(),
+    });
     return res.status(200).send({
       status: "success",
       message: "Area created successfully",
@@ -130,7 +132,7 @@ const update = async (req, res) => {
 
     await Area.update(
       {
-        name: params.name,
+        name: params.name.toUpperCase(),
       },
       {
         where: {
@@ -175,7 +177,7 @@ const remove = async (req, res) => {
     return res.status(200).send({
       status: "success",
       message: "The area was deleted succesfully",
-      data: AreaToRemove
+      data: AreaToRemove,
     });
   } catch (error) {
     return res.status(500).send({
