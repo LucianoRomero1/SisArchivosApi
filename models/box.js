@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "state",
         foreignKey: "stateId",
       });
-      Box.hasMany(models.Box, {
+      Box.hasMany(models.Folder, {
         as: "folders",
         foreignKey: "boxId",
       });

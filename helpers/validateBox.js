@@ -9,13 +9,12 @@ const validateBox = (params) => {
     !validator.isEmpty(params.title) &&
     validator.isLength(params.title, { min: 4, max: undefined });
 
-  let state =
-    !validator.isEmpty(params.state) && validator.isNumeric(params.state);
-
   let areaId =
     !validator.isEmpty(params.areaId) && validator.isNumeric(params.areaId);
   let sideId =
     !validator.isEmpty(params.sideId) && validator.isNumeric(params.sideId);
+  let stateId =
+    !validator.isEmpty(params.stateId) && validator.isNumeric(params.stateId);
 
   if (params.boxNumber) {
     let boxNumber =
@@ -60,7 +59,14 @@ const validateBox = (params) => {
     }
   }
 
-  if (!dateTo || !dateMoment.isValid() || !title || !state || !areaId || !sideId) {
+  if (
+    !dateTo ||
+    !dateMoment.isValid() ||
+    !title ||
+    !areaId ||
+    !sideId ||
+    !stateId
+  ) {
     throw new Error("Validation failed");
   }
 };

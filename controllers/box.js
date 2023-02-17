@@ -17,7 +17,7 @@ const test = (req, res) => {
 const create = async (req, res) => {
   let params = req.body;
 
-  if (!params.dateTo || !params.title || !params.state || !params.areaId || !params.sideId) {
+  if (!params.dateTo || !params.title || !params.areaId || !params.sideId || !params.stateId) {
     return res.status(400).send({
       status: "error",
       message: "Missing parameters",
@@ -55,12 +55,12 @@ const create = async (req, res) => {
       dateTo: dateMoment.toDate(),
       areaId: params.areaId,
       sideId: params.sideId,
+      stateId: params.stateId,
       column: params.column,
       floor: params.floor,
       numberFrom: params.numberFrom,
       numberTo: params.numberTo,
       observation: params.observation,
-      state: params.state,
     });
 
     return res.status(200).json({
