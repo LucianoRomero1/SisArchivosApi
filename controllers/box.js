@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 //Services
 const validateBox = require("../helpers/validateBox");
 const moment = require("moment");
+const general = require("../services/general");
 
 //Models
 const db = require("../models/index");
@@ -85,30 +86,19 @@ const create = async (req, res) => {
 };
 
 const list = async (req, res) => {
-  const pageAsNumber = Number.parseInt(req.query.page);
-  const sizeAsNumber = Number.parseInt(req.query.size);
-
-  let page = 0;
-  if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
-    page = pageAsNumber;
+  try {
+    const data = await general.list(req, res, Box);
+    return res.status(200).send({
+      status: "success",
+      data: data,
+      totalPages: Math.ceil(data.count / data.size),
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: "error",
+      message: "Error listing boxes " + error,
+    });
   }
-
-  let size = 10;
-  if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
-    size = sizeAsNumber;
-  }
-
-  const boxes = await Box.findAndCountAll({
-    order: [["createdAt", "DESC"]],
-    limit: size,
-    offset: page * size,
-  });
-
-  return res.status(200).send({
-    status: "success",
-    data: boxes,
-    totalPages: Math.ceil(boxes.count / size),
-  });
 };
 
 const detail = async (req, res) => {

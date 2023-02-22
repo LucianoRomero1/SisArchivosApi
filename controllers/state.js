@@ -1,6 +1,9 @@
 //Dependencies
 const { Op } = require("sequelize");
 
+//Services
+const general = require("../services/general");
+
 //Models
 const db = require("../models/index");
 const State = db.State;
@@ -55,30 +58,19 @@ const create = async (req, res) => {
 };
 
 const list = async (req, res) => {
-  const pageAsNumber = Number.parseInt(req.query.page);
-  const sizeAsNumber = Number.parseInt(req.query.size);
-
-  let page = 0;
-  if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
-    page = pageAsNumber;
+  try {
+    const data = await general.list(req, res, State);
+    return res.status(200).send({
+      status: "success",
+      data: data,
+      totalPages: Math.ceil(data.count / data.size),
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: "error",
+      message: "Error listing states " + error,
+    });
   }
-
-  let size = 10;
-  if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
-    size = sizeAsNumber;
-  }
-
-  const states = await State.findAndCountAll({
-    order: [["createdAt", "DESC"]],
-    limit: size,
-    offset: page * size,
-  });
-
-  return res.status(200).send({
-    status: "success",
-    data: states,
-    totalPages: Math.ceil(states.count / size),
-  });
 };
 
 const detail = async (req, res) => {
