@@ -1,3 +1,6 @@
+//Dependencies
+const { Op } = require("sequelize");
+
 //Services
 const validateBox = require("../helpers/validateBox");
 const moment = require("moment");
@@ -39,13 +42,13 @@ const create = async (req, res) => {
     });
   }
 
-  const BoxExist = await Box.findOne({
+  const boxExist = await Box.findOne({
     where: {
       title: params.title,
     },
   });
 
-  if (BoxExist) {
+  if (boxExist) {
     return res.status(200).send({
       status: "success",
       message: "There is already a box with that name",
@@ -171,6 +174,20 @@ const update = async (req, res) => {
       return res.status(500).send({
         status: "error",
         message: "Invalid parameters",
+      });
+    }
+
+    const boxExist = await Box.findOne({
+      where: {
+        title: params.title,
+        [Op.not]: { id: id },
+      },
+    });
+
+    if (boxExist) {
+      return res.status(200).send({
+        status: "success",
+        message: "There is already a box with that name",
       });
     }
 

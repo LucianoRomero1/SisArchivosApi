@@ -1,3 +1,6 @@
+//Dependencies
+const { Op } = require("sequelize");
+
 //Models
 const db = require("../models/index");
 const Area = db.Area;
@@ -127,6 +130,20 @@ const update = async (req, res) => {
       return res.status(400).send({
         status: "error",
         message: "The name of Area is required",
+      });
+    }
+
+    const AreaExist = await Area.findOne({
+      where: {
+        name: params.name,
+        [Op.not]: { id: id },
+      },
+    });
+
+    if (AreaExist) {
+      return res.status(200).send({
+        status: "success",
+        message: "The area " + AreaExist.name + " already exist",
       });
     }
 
