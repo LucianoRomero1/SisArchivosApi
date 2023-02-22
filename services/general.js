@@ -22,22 +22,6 @@ const list = async (req, res, model) => {
   return data;
 };
 
-const detail = async (req, res, model) => {
-  let id = req.params.id;
-
-  const modelDetail = await model.findOne({
-    where: {
-      id: id,
-    },
-    // attributes: {
-    //   exclude: ["updatedAt"],
-    // },
-  });
-
-  return modelDetail;
-};
-
 module.exports = {
   list,
-  detail,
 };

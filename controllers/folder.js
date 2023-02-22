@@ -95,26 +95,25 @@ const list = async (req, res) => {
 };
 
 const detail = async (req, res) => {
-  try {
-    const data = await general.detail(req, res, Folder);
-    if (data != null) {
-      return res.status(200).send({
-        status: "success",
-        data: data,
-      });
-    } else {
-      //Si la data es nula es porque la funcion findOne no encontró nada
-      return res.status(404).send({
-        status: "error",
-        message: "Folder does not exist",
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
+  let id = req.params.id;
+
+  const folderDetail = await Folder.findOne({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!folderDetail) {
+    return res.status(404).send({
       status: "error",
-      message: "Error with show detail " + error,
+      message: "Folder does not exist",
     });
   }
+
+  return res.status(200).send({
+    status: "success",
+    data: folderDetail,
+  });
 };
 
 const update = async (req, res) => {
