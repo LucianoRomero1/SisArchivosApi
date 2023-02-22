@@ -1,3 +1,6 @@
+//Dependencies
+const { Op } = require("sequelize");
+
 //Models
 const db = require("../models/index");
 const State = db.State;
@@ -127,6 +130,20 @@ const update = async (req, res) => {
       return res.status(400).send({
         status: "error",
         message: "The description of state is required",
+      });
+    }
+
+    const stateExist = await State.findOne({
+      where: {
+        description: params.description,
+        [Op.not]: { id: id },
+      },
+    });
+
+    if (stateExist) {
+      return res.status(200).send({
+        status: "success",
+        message: "The state " + stateExist.description + " already exist",
       });
     }
 

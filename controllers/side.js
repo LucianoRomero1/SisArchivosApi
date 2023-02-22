@@ -1,3 +1,6 @@
+//Dependencies
+const { Op } = require("sequelize");
+
 //Models
 const db = require("../models/index");
 const Side = db.Side;
@@ -127,6 +130,20 @@ const update = async (req, res) => {
       return res.status(400).send({
         status: "error",
         message: "The name of side is required",
+      });
+    }
+
+    const SideExist = await Side.findOne({
+      where: {
+        name: params.name,
+        [Op.not]: { id: id },
+      },
+    });
+
+    if (SideExist) {
+      return res.status(200).send({
+        status: "success",
+        message: "The side " + SideExist.name + " already exist",
       });
     }
 
