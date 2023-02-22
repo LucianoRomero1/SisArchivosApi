@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "boxId",
       });
 
+      Folder.belongsTo(models.State, {
+        as: "state",
+        foreignKey: "stateId",
+      });
+
       Folder.hasMany(models.Movement, {
         as: "movements",
         foreignKey: "folderId",
@@ -25,9 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       folderNumber: DataTypes.INTEGER,
       title: DataTypes.STRING,
-      state: DataTypes.TINYINT,
-      dateFrom: DataTypes.DATE,
       dateTo: DataTypes.DATE,
+      stateId: DataTypes.INTEGER,
       boxId: DataTypes.INTEGER,
     },
     {

@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "stateId",
         onDelete: "CASCADE",
       });
+
+      State.hasMany(models.Folder, {
+        as: "folders",
+        foreignKey: "stateId",
+        onDelete: "CASCADE",
+      });
     }
   }
   State.init({

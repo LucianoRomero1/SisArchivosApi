@@ -15,14 +15,11 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
-      state: {
-        type: Sequelize.TINYINT
-      },
-      dateFrom: {
-        type: Sequelize.DATE
-      },
       dateTo: {
         type: Sequelize.DATE
+      },
+      stateId: {
+        type: Sequelize.INTEGER,
       },
       boxId: {
         type: Sequelize.INTEGER
