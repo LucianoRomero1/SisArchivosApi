@@ -41,13 +41,13 @@ const register = async (req, res) => {
     });
   }
 
-  const UserExist = await User.findOne({
+  const userExist = await User.findOne({
     where: {
       [Op.or]: [{ username: params.username }, { email: params.email }],
     },
   });
 
-  if (UserExist) {
+  if (userExist) {
     return res.status(200).send({
       status: "success",
       message: "User already exist",
@@ -82,20 +82,20 @@ const login = async (req, res) => {
     });
   }
 
-  const UserExist = await User.findOne({
+  const userExist = await User.findOne({
     where: {
       [Op.or]: [{ username: params.username }, { email: params.username }],
     },
   });
 
-  if (!UserExist) {
+  if (!userExist) {
     return res.status(404).send({
       status: "error",
       message: "User doesnt exist",
     });
   }
 
-  let pwd = await bcrypt.compare(params.password, UserExist.password);
+  let pwd = await bcrypt.compare(params.password, userExist.password);
   if (!pwd) {
     return res.status(400).send({
       status: "error",
@@ -103,14 +103,14 @@ const login = async (req, res) => {
     });
   }
 
-  const token = await jwt.createToken(UserExist);
+  const token = await jwt.createToken(userExist);
 
   return res.status(200).send({
     status: "success",
     message: "Login",
     user: {
-      id: UserExist.id,
-      username: UserExist.username,
+      id: userExist.id,
+      username: userExist.username,
     },
     token,
   });
@@ -119,7 +119,7 @@ const login = async (req, res) => {
 const profile = async (req, res) => {
   const id = req.params.id;
 
-  const UserProfile = await User.findOne({
+  const userProfile = await User.findOne({
     where: {
       id: id,
     },
@@ -128,7 +128,7 @@ const profile = async (req, res) => {
     },
   });
 
-  if (!UserProfile) {
+  if (!userProfile) {
     return res.status(404).send({
       status: "error",
       message: "User does not exist",
@@ -137,7 +137,7 @@ const profile = async (req, res) => {
 
   return res.status(200).send({
     status: "success",
-    user: UserProfile,
+    user: userProfile,
   });
 };
 
