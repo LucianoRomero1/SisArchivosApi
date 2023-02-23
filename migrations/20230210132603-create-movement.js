@@ -9,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      state: {
-        type: Sequelize.TINYINT
-      },
       withdrawalDate: {
         type: Sequelize.DATE
       },
@@ -23,6 +20,9 @@ module.exports = {
       },
       employeeId: {
         type: Sequelize.INTEGER
+      },
+      stateId: {
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

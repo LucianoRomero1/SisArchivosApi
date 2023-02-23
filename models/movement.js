@@ -18,15 +18,20 @@ module.exports = (sequelize, DataTypes) => {
         as: "folder",
         foreignKey: "folderId",
       });
+
+      Movement.belongsTo(models.State, {
+        as: "state",
+        foreignKey: "stateId",
+      });
     }
   }
   Movement.init(
     {
-      state: DataTypes.TINYINT,
       withdrawalDate: DataTypes.DATE,
       returnDate: DataTypes.DATE,
       folderId: DataTypes.INTEGER,
       employeeId: DataTypes.INTEGER,
+      stateId: DataTypes.INTEGER
     },
     {
       sequelize,
