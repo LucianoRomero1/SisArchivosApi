@@ -242,10 +242,26 @@ const remove = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const data = await general.getAll(Box, "title");
+    return res.status(200).send({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "error getting all boxes",
+    });
+  }
+};
+
 module.exports = {
   create,
   list,
   detail,
   update,
   remove,
+  getAll
 };

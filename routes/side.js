@@ -9,5 +9,6 @@ router.get("/list/:page?/:size?", check.auth, SideController.list);
 router.get("/detail/:id", check.auth, SideController.detail);
 router.put("/update/:id", check.auth, SideController.update);
 router.delete("/remove/:id", check.auth, SideController.remove);
+router.get("/getAll", check.auth, SideController.getAll);
 
 module.exports = router;

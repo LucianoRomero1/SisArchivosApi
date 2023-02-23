@@ -9,5 +9,6 @@ router.get("/list/:page?/:size?", check.auth, FolderController.list);
 router.get("/detail/:id", check.auth, FolderController.detail);
 router.put("/update/:id", check.auth, FolderController.update);
 router.delete("/remove/:id", check.auth, FolderController.remove);
+router.get("/getAll", check.auth, FolderController.getAll);
 
 module.exports = router;

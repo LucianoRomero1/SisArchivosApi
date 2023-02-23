@@ -22,6 +22,18 @@ const list = async (req, res, model) => {
   return data;
 };
 
+const getAll = async(model, attributeToOrder) => {
+  const data = await model.findAll({
+    order: [[attributeToOrder, "ASC"]],
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+  });
+
+  return data;
+}
+
 module.exports = {
   list,
+  getAll
 };
