@@ -11,13 +11,6 @@ const db = require("../models/index");
 const Folder = db.Folder;
 
 //Endpoints
-const test = (req, res) => {
-  return res.status(200).send({
-    status: "success",
-    message: "message sended from folder controller",
-  });
-};
-
 const create = async (req, res) => {
   const params = req.body;
   if (
@@ -233,11 +226,26 @@ const remove = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const data = await general.getAll(Folder, "title");
+    return res.status(200).send({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "error getting all folders",
+    });
+  }
+};
+
 module.exports = {
-  test,
   create,
   list,
   detail,
   update,
   remove,
+  getAll
 };

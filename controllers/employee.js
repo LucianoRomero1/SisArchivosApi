@@ -9,13 +9,7 @@ const validateEmployee = require("../helpers/validateEmployee");
 const db = require("../models/index");
 const Employee = db.Employee;
 
-const test = (req, res) => {
-  return res.status(200).send({
-    status: "success",
-    message: "message sended from employee controller",
-  });
-};
-
+//Endpoints
 const create = async (req, res) => {
   let params = req.body;
   if (!params.docket || !params.name || !params.lastname) {
@@ -210,11 +204,26 @@ const remove = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const data = await general.getAll(Employee, "docket");
+    return res.status(200).send({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "error getting all employees",
+    });
+  }
+};
+
 module.exports = {
-  test,
   create,
   list,
   detail,
   update,
   remove,
+  getAll
 };

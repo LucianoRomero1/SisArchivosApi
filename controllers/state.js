@@ -9,13 +9,6 @@ const db = require("../models/index");
 const State = db.State;
 
 //Endpoints
-const test = (req, res) => {
-  return res.status(200).send({
-    status: "success",
-    message: "Message sended from state controller",
-  });
-};
-
 const create = async (req, res) => {
   const params = req.body;
 
@@ -196,11 +189,26 @@ const remove = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const data = await general.getAll(State, "description");
+    return res.status(200).send({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "error getting all states",
+    });
+  }
+};
+
 module.exports = {
-  test,
   create,
   list,
   detail,
   update,
   remove,
+  getAll
 };
