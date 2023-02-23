@@ -4,7 +4,6 @@ const router = express.Router();
 const SideController = require("../controllers/side");
 const check = require("../middlewares/auth");
 
-router.get("/test", check.auth, SideController.test);
 router.post("/create", check.auth, SideController.create);
 router.get("/list/:page?/:size?", check.auth, SideController.list);
 router.get("/detail/:id", check.auth, SideController.detail);

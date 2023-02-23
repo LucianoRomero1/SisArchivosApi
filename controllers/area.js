@@ -9,13 +9,6 @@ const db = require("../models/index");
 const Area = db.Area;
 
 //Endpoints
-const test = (req, res) => {
-  return res.status(200).send({
-    status: "success",
-    message: "Message sended from area controller",
-  });
-};
-
 const create = async (req, res) => {
   const params = req.body;
 
@@ -197,7 +190,6 @@ const remove = async (req, res) => {
 };
 
 module.exports = {
-  test,
   create,
   list,
   detail,

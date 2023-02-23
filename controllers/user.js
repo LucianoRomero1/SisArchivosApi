@@ -11,12 +11,6 @@ const db = require("../models/index");
 const User = db.User;
 
 //Endpoints
-const test = (req, res) => {
-  return res.status(200).send({
-    message: "Message from UserController",
-  });
-};
-
 const register = async (req, res) => {
   let params = req.body;
   if (
@@ -142,7 +136,6 @@ const profile = async (req, res) => {
 };
 
 module.exports = {
-  test,
   register,
   login,
   profile,

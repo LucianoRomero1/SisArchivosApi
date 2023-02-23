@@ -11,13 +11,6 @@ const db = require("../models/index");
 const Folder = db.Folder;
 
 //Endpoints
-const test = (req, res) => {
-  return res.status(200).send({
-    status: "success",
-    message: "message sended from folder controller",
-  });
-};
-
 const create = async (req, res) => {
   const params = req.body;
   if (
@@ -234,7 +227,6 @@ const remove = async (req, res) => {
 };
 
 module.exports = {
-  test,
   create,
   list,
   detail,
