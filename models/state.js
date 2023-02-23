@@ -21,6 +21,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "stateId",
         onDelete: "CASCADE",
       });
+
+      State.hasMany(models.Movement, {
+        as: "movements",
+        foreignKey: "stateId",
+        onDelete: "CASCADE",
+      });
     }
   }
   State.init({

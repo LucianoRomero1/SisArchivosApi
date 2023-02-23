@@ -10,6 +10,7 @@ const StateRoutes = require("./routes/state");
 const BoxRoutes = require("./routes/box");
 const FolderRoutes = require("./routes/folder");
 const EmployeeRoutes = require("./routes/employee");
+const MovementRoutes = require("./routes/movement");
 
 //Create node server
 const app = express();
@@ -30,6 +31,7 @@ app.use("/api/state/", StateRoutes);
 app.use("/api/box/", BoxRoutes);
 app.use("/api/folder/", FolderRoutes);
 app.use("/api/employee/", EmployeeRoutes);
+app.use("/api/movement/", MovementRoutes);
 
 //Put the server to listen http requests
 app.listen(port, () => {
