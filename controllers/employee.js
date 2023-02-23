@@ -3,63 +3,71 @@ const { Op } = require("sequelize");
 
 //Services
 const general = require("../services/general");
+const validateEmployee = require("../helpers/validateEmployee");
 
 //Models
 const db = require("../models/index");
-const Area = db.Area;
+const Employee = db.Employee;
 
-//Endpoints
 const test = (req, res) => {
   return res.status(200).send({
     status: "success",
-    message: "Message sended from area controller",
+    message: "message sended from employee controller",
   });
 };
 
 const create = async (req, res) => {
-  const params = req.body;
-
-  if (!params.name) {
-    //Tambien podria retornar como mensaje "missing parameters". Pero como es uno solo el campo que tiene que llegar no es problema
+  let params = req.body;
+  if (!params.docket || !params.name || !params.lastname) {
     return res.status(400).send({
       status: "error",
-      message: "The name of area is required",
-    });
-  }
-
-  const areaExist = await Area.findOne({
-    where: {
-      name: params.name,
-    },
-  });
-
-  if (areaExist) {
-    return res.status(200).send({
-      status: "success",
-      message: "The area " + areaExist.name + " already exist",
+      message: "Missing parameters",
     });
   }
 
   try {
-    let newArea = await Area.create({
-      name: params.name.toUpperCase(),
+    validateEmployee(params);
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Invalid parameters",
     });
+  }
+
+  const employeeExist = await Employee.findOne({
+    where: {
+      docket: params.docket,
+    },
+  });
+
+  if (employeeExist) {
     return res.status(200).send({
       status: "success",
-      message: "Area created successfully",
-      area: newArea,
+      message:
+        "The employee with docket number " +
+        employeeExist.docket +
+        " already exist",
+    });
+  }
+
+  try {
+    let newEmployee = await Employee.create(params);
+    return res.status(200).send({
+      status: "success",
+      message: "Employee created successfully",
+      employee: newEmployee,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
-      message: "Error saving area " + error,
+      message: "Error saving employee " + error,
     });
   }
 };
 
 const list = async (req, res) => {
   try {
-    const data = await general.list(req, res, Area);
+    const data = await general.list(req, res, Employee);
     return res.status(200).send({
       status: "success",
       data: data,
@@ -68,7 +76,7 @@ const list = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       status: "error",
-      message: "Error listing areas " + error,
+      message: "Error listing employees " + error,
     });
   }
 };
@@ -76,72 +84,78 @@ const list = async (req, res) => {
 const detail = async (req, res) => {
   let id = req.params.id;
 
-  const areaDetail = await Area.findOne({
+  const employeeDetail = await Employee.findOne({
     where: {
       id: id,
     },
-    // attributes: {
-    //   exclude: ["updatedAt"],
-    // },
   });
 
-  if (!areaDetail) {
+  if (!employeeDetail) {
     return res.status(404).send({
       status: "error",
-      message: "Area does not exist",
+      message: "Employee does not exist",
     });
   }
 
   return res.status(200).send({
     status: "success",
-    data: areaDetail,
+    data: employeeDetail,
   });
 };
 
 const update = async (req, res) => {
   let id = req.params.id;
 
-  const areaFinded = await Area.findOne({
+  const employeeFinded = await Employee.findOne({
     where: {
       id: id,
     },
   });
 
-  if (!areaFinded) {
+  if (!employeeFinded) {
     return res.status(404).send({
       status: "error",
-      message: "Area does not exist",
+      message: "Employee does not exist",
     });
   }
 
   try {
     let params = req.body;
-
-    if (!params.name) {
-      //Tambien podria retornar como mensaje "missing parameters". Pero como es uno solo el campo que tiene que llegar no es problema
+    if (!params.docket || !params.name || !params.lastname) {
       return res.status(400).send({
         status: "error",
-        message: "The name of Area is required",
+        message: "Missing parameters",
       });
     }
 
-    const areaExist = await Area.findOne({
+    try {
+      validateEmployee(params);
+    } catch (error) {
+      return res.status(500).send({
+        status: "error",
+        message: "Invalid parameters",
+      });
+    }
+
+    const employeeExist = await Employee.findOne({
       where: {
-        name: params.name,
+        docket: params.docket,
         [Op.not]: { id: id },
       },
     });
 
-    if (areaExist) {
+    if (employeeExist) {
       return res.status(200).send({
         status: "success",
-        message: "The area " + areaExist.name + " already exist",
+        message: "There is already a employee with that docket number",
       });
     }
 
-    await Area.update(
+    await Employee.update(
       {
-        name: params.name.toUpperCase(),
+        docket: params.docket,
+        name: params.name,
+        lastname: params.lastname,
       },
       {
         where: {
@@ -150,16 +164,16 @@ const update = async (req, res) => {
       }
     );
 
-    await areaFinded.reload();
+    await employeeFinded.reload();
 
     return res.status(200).send({
       status: "success",
-      data: areaFinded,
+      data: employeeFinded,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
-      message: "Error trying to update area " + error,
+      message: "Error trying to update employee " + error,
     });
   }
 };
@@ -167,31 +181,31 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   let id = req.params.id;
 
-  const areaToRemove = await Area.findOne({
+  const employeeToRemove = await Employee.findOne({
     where: {
       id: id,
     },
   });
 
-  if (!areaToRemove) {
+  if (!employeeToRemove) {
     return res.status(404).send({
       status: "error",
-      message: "Area does not exist",
+      message: "Employee does not exist",
     });
   }
 
   try {
-    await areaToRemove.destroy();
+    await employeeToRemove.destroy();
 
     return res.status(200).send({
       status: "success",
-      message: "The area was deleted succesfully",
-      data: areaToRemove,
+      message: "The employee was deleted succesfully",
+      data: employeeToRemove,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
-      message: "Error trying to delete area " + error,
+      message: "Error trying to delete employee " + error,
     });
   }
 };

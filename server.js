@@ -9,6 +9,7 @@ const SideRoutes = require("./routes/side");
 const StateRoutes = require("./routes/state");
 const BoxRoutes = require("./routes/box");
 const FolderRoutes = require("./routes/folder");
+const EmployeeRoutes = require("./routes/employee");
 
 //Create node server
 const app = express();
@@ -27,7 +28,8 @@ app.use("/api/area/", AreaRoutes);
 app.use("/api/side/", SideRoutes);
 app.use("/api/state/", StateRoutes);
 app.use("/api/box/", BoxRoutes);
-app.use("/api/folder", FolderRoutes);
+app.use("/api/folder/", FolderRoutes);
+app.use("/api/employee/", EmployeeRoutes);
 
 //Put the server to listen http requests
 app.listen(port, () => {
