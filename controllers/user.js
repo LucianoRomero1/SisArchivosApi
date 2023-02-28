@@ -76,8 +76,11 @@ const login = async (req, res) => {
     });
   }
 
+  console.log(params.username);
+
   const userExist = await User.findOne({
     where: {
+      email: {[Op.like]: `%${params.username}%`},
       [Op.or]: [{ username: params.username }, { email: params.username }],
     },
   });
